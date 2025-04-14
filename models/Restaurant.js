@@ -50,16 +50,13 @@ const RestaurantSchema = new mongoose.Schema({
       "Please enter a valid closing time in HH:mm format",
     ],
   },
-  picture: {
-    type: String,
-    required: [true, "Please add a restaurant picture"],
-  },
   
 },
 {
     toJSON:{virtuals:true},
     toObject:{virtuals:true}
 });
+
 //Reverse populate with virtuals
 RestaurantSchema.virtual('reservations',{
     ref:'Reservation',
@@ -67,6 +64,30 @@ RestaurantSchema.virtual('reservations',{
     foreignField:'restaurant',
     justOne:false
 });
+
+RestaurantSchema.virtual('menuItems',{
+    ref: 'MenuItem',
+    localField: '_id',
+    foreignField: 'restaurant',
+    justOne:false
+});
+
+//2 อันด้านล่างคาดว่าต้องเปลี่ยน ref เพราะ ref = file name ต้องเปลี่ยนตามขื่อไฟล์ที่พี่เฟินตั้ง
+// order from delivery
+RestaurantSchema.virtual('orderItems',{
+    ref: 'OrderList',
+    localField: '_id',
+    foreignField: 'restaurant',
+    justOne:false
+})
+
+// order to restaurant
+RestaurantSchema.virtual('orderItems',{
+  ref: 'OrderList',
+  localField: '_id',
+  foreignField: 'restaurant',
+  justOne:false
+})
 
 module.exports = mongoose.model("Restaurant", RestaurantSchema);
 

@@ -28,13 +28,13 @@ const UserSchema = new mongoose.Schema({
 
   role: {
     type: String,
-    enum: ["user", "admin"],
+    enum: ["user", "admin","rider","manager"],
     default: "user",
   },
 
   password: {
     type: String,
-    required: [true, "Please add a password"],
+    required: [true, "Please add a password."],
     minlength: 6,
     select: false,
   },
@@ -43,7 +43,7 @@ const UserSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  },
+  }
 });
 
 //Bcrypt add salt
@@ -64,3 +64,4 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 module.exports = mongoose.model("User", UserSchema);
+

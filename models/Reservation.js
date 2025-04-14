@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-const { schema } = require("./Restaurant");
 
 const ReservationSchema = new mongoose.Schema({
-  reservationDate: {
+  reservationDateTime: {
     type: Date,
     required: true,
   },
@@ -24,7 +23,8 @@ const ReservationSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-  },
+  }
 });
 
 module.exports = mongoose.model("Reservation", ReservationSchema);
+
