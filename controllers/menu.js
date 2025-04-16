@@ -1,7 +1,9 @@
 const MenuItem = require('../models/MenuItem');
 const Restaurant = require('../models/Restaurant');
 
-//
+//@desc Get all menus from restaurant
+//@route GET /api/v1/restaurants/:restaurantId/menu
+//@access  Public 
 exports.getMenus = async (req, res, next) => {
     let query;
     query = MenuItem.find({ restaurant: req.params.RestaurantId });
@@ -20,6 +22,9 @@ exports.getMenus = async (req, res, next) => {
 }
 
 
+//@desc Get all restaurants
+//@route GET /api/v1/restaurants/:restaurantId/menu/:menuId
+//@access  Public 
 exports.getMenu = async (req, res, next) => {
     try {
         const Menu = await MenuItem.findById(req.params.id).populate({
@@ -40,6 +45,8 @@ exports.getMenu = async (req, res, next) => {
         return res.status(500).json({ success: false, message: "Cannot find Menu" });
     }
 };
+
+
 exports.addMenuItem = async (req, res, next) => {
     try {
         req.body.restaurant = req.params.RestaurantId;
@@ -59,6 +66,8 @@ exports.addMenuItem = async (req, res, next) => {
         return res.status(500).json({ success: false, message: "Cannot create Menu" });
     }
 };
+
+
 exports.updateMenuItem = async (req, res, next) => {
     try {
       let menuItem = await MenuItem.findById(req.params.id);

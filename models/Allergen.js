@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 
 const AllergenSchema = new mongoose.Schema({
   name: {
-    type: [String],
+    type: String,
     required: true,
     unique: true,
     trim: true
   },
   description: {
-    type: [String],
+    type: String,
     required: true //อธิบายรายละเอียดว่าส่วนผสมนี้ทำให้แพ้ได้ไงไรงี้
   }
 });
