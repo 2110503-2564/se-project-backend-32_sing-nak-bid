@@ -23,7 +23,7 @@ const MenuItemSchema = new mongoose.Schema({
     ref: "Ingredient",
     required: true
   }],
-  //เก็บ Allergens from User
+  //เก็บ Allergens
   allergens: [{
     type: mongoose.Schema.ObjectId,
     ref: "Allergen"

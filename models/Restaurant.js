@@ -77,22 +77,22 @@ RestaurantSchema.virtual('menuItems',{
     justOne:false
 });
 
-//2 อันด้านล่างคาดว่าต้องเปลี่ยน ref เพราะ ref = file name ต้องเปลี่ยนตามขื่อไฟล์ที่พี่เฟินตั้ง
-// order from delivery
-RestaurantSchema.virtual('orderItems',{
-    ref: 'OrderList',
-    localField: '_id',
-    foreignField: 'restaurant',
-    justOne:false
-})
+// //2 อันด้านล่างคาดว่าต้องเปลี่ยน ref เพราะ ref = file name ต้องเปลี่ยนตามขื่อไฟล์ที่พี่เฟินตั้ง
+// // order from delivery
+// RestaurantSchema.virtual('orderItems',{
+//     ref: 'OrderList',
+//     localField: '_id',
+//     foreignField: 'restaurant',
+//     justOne:false
+// })
 
-// order to restaurant
-RestaurantSchema.virtual('orderItems',{
-  ref: 'OrderList',
-  localField: '_id',
-  foreignField: 'restaurant',
-  justOne:false
-})
+// // order to restaurant
+// RestaurantSchema.virtual('orderItems',{
+//   ref: 'OrderList',
+//   localField: '_id',
+//   foreignField: 'restaurant',
+//   justOne:false
+// })
 
 module.exports = mongoose.model("Restaurant", RestaurantSchema);
 
