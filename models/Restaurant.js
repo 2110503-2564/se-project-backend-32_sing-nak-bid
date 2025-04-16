@@ -50,6 +50,11 @@ const RestaurantSchema = new mongoose.Schema({
       "Please enter a valid closing time in HH:mm format",
     ],
   },
+  managerId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+      required: [true, "Please add a person to manage this restaurant"],
+  }
   
 },
 {
