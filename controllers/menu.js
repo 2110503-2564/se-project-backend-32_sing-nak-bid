@@ -1,7 +1,5 @@
-const Reservation = require('../models/Reservation');
+const MenuItem = require('../models/MenuItem');
 const Restaurant = require('../models/Restaurant');
-const MenuItem = require('../models/MenuItem')
-
 
 //
 exports.getMenus = async (req, res, next) => {
@@ -59,5 +57,46 @@ exports.addMenuItem = async (req, res, next) => {
     } catch (error) {
         console.log(error.stack);
         return res.status(500).json({ success: false, message: "Cannot create Menu" });
+    }
+};
+exports.updateMenuItem = async (req, res, next) => {
+    try {
+      let menuItem = await MenuItem.findById(req.params.id);
+      if (!menuItem) {
+        return res.status(404).json({ success: false, message: `No menuItem with the id of ${req.params.id}` });
+      }
+      menuItem = await MenuItem.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+      });
+  
+      res.status(200).json({
+        success: true,
+        data: menuItem
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ success: false, message: 'Cannot update MenuItem' });
+    }
+  };
+
+
+exports.deleteMenuItem = async (req, res, next) => {
+    try {
+        const menuItem = await MenuItem.findById(req.params.id);
+        if (!menuItem) {
+            return res.status(404).json({ success: false, message: `No menuItem with the id of ${req.params.id}` });
+        }
+        
+
+        await menuItem.deleteOne();
+        res.status(200).json({
+            success: true,
+            data: {}
+        });
+
+    } catch (error) {
+        console.log(error.stack);
+        return res.status(500).json({ success: false, message: "Cannot delete MenuItem" });
     }
 };
