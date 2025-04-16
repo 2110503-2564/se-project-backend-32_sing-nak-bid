@@ -17,12 +17,12 @@ const MenuItemSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please add a menu description."]
   },
-  //เก็บ Ingredient เป็น Array
-  ingredient: [{
-    type: mongoose.Schema.ObjectId,
-    ref: "Ingredient",
-    required: true
-  }],
+  // //เก็บ Ingredient เป็น Array
+  // ingredient: [{
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: "Ingredient",
+  //   required: true
+  // }],
   //เก็บ Allergens
   allergens: [{
     type: mongoose.Schema.ObjectId,
@@ -44,8 +44,13 @@ const MenuItemSchema = new mongoose.Schema({
   orderCount: {
     type: Number,
     default: 0
+  },
+  stockCount: {
+    type: Number,
+    default: 0
   }
 });
+
 
 module.exports = mongoose.model("MenuItem", MenuItemSchema);
 

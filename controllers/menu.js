@@ -4,7 +4,7 @@ const Restaurant = require('../models/Restaurant');
 //
 exports.getMenus = async (req, res, next) => {
     let query;
-    query = MenuItem.find({ restaurant: req.RestaurantId });
+    query = MenuItem.find({ restaurant: req.params.RestaurantId });
     try {
         const Menu = await query;
 
