@@ -53,7 +53,6 @@ exports.getReservation = async (req, res, next) => {
 };
 
 
-
 exports.addReservation = async (req, res, next) => {
     try {
         req.body.restaurant = req.params.RestaurantId;
@@ -79,7 +78,6 @@ exports.addReservation = async (req, res, next) => {
         return res.status(500).json({ success: false, message: "Cannot create Reservation" });
     }
 };
-
 
 
 exports.updateReservation = async (req, res, next) => {
@@ -110,7 +108,6 @@ exports.updateReservation = async (req, res, next) => {
   };
 
 
-  
 exports.deleteReservation = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id);

@@ -2,6 +2,8 @@ const Reservation = require('../models/Reservation');
 const Restaurant = require('../models/Restaurant');
 const MenuItem = require('../models/MenuItem')
 
+
+//
 exports.getMenus = async (req, res, next) => {
     let query;
     query = MenuItem.find({ restaurant: req.RestaurantId });
@@ -18,6 +20,8 @@ exports.getMenus = async (req, res, next) => {
         return res.status(500).json({ success: false, message: "Cannot get Menu" });
     }
 }
+
+
 exports.getMenu = async (req, res, next) => {
     try {
         const Menu = await MenuItem.findById(req.params.id).populate({

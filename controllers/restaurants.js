@@ -1,11 +1,9 @@
 const Restaurant = require('../models/Restaurant.js');
 const Reservation = require('../models/Reservation.js');
 
-
 //@desc Get all restaurants
 //@route GET /api/v1/restaurants
 //@access  Public 
-
 exports.getRestaurants=async(req,res,next)=>{
     let query;
 
@@ -13,22 +11,18 @@ exports.getRestaurants=async(req,res,next)=>{
     const reqQuery={...req.query}; //split to array of key,value
 
     //exclude some fields => select,sort
-const removeFields = ['select','sort','page','limit'];
+    const removeFields = ['select','sort','page','limit'];
 
-//Loop over remove fields and delete them from reqQuery
-removeFields.forEach(param=>delete reqQuery[param]);
-console.log(reqQuery);
+    //Loop over remove fields and delete them from reqQuery
+    removeFields.forEach(param=>delete reqQuery[param]);
+    console.log(reqQuery);
 
-
-//Create query String
-
-
+    //Create query String
     let queryStr = JSON.stringify(reqQuery);
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g,match=>`$${match}`);
 
     //finding resource
     query = Restaurant.find(JSON.parse(queryStr)).populate('reservations').populate('menuItems');
-
 
     //Select Fields
     if(req.query.select){
@@ -44,14 +38,12 @@ console.log(reqQuery);
         query = query.sort(`-createAt`);
     }
 
-
     //Pagination
     const page = parseInt(req.query.page,10) || 1;
     const limit = parseInt(req.query.limit,10) ||25;
     const startIndex = (page-1)*limit;
     const endIndex = page*limit;
    
-
     try{
         const total = await Restaurant.countDocuments();
      query = query.skip(startIndex).limit(limit);
@@ -86,14 +78,10 @@ console.log(reqQuery);
 }
 }
 
-
-
 //@desc Get single restaurants
 //@route GET /api/v1/restaurants/:id
 //@access  Public 
-
 exports.getRestaurant=async(req,res,next)=>{
-   
    try{
     const restaurant = await Restaurant.findById(req.params.id);
     
@@ -101,31 +89,24 @@ exports.getRestaurant=async(req,res,next)=>{
     if(!restaurant){
         return  res.status(400).json({success: false,messsage : `Restaurant not found with id of ${req.params.id}`});
     }
-    res.status(200).json({success:true, data: restaurant});
 
+    res.status(200).json({success:true, data: restaurant});
    }catch(err){
-   
-   
     res.status(400).json({success: false});
 }}
 
 //@desc Create a Restaurants
 //@route POST /api/v1/restaurants
 //@access  Private
-
 exports.createRestaurant=async(req,res,next)=>{
     const restaurant = await Restaurant.create(req.body);
     res.status(201).json({success:true ,data : restaurant});
 }
 
-
-
 //@desc  Update single Restaurants
 //@route PUT /api/v1/Restaurants/:id
 //@access  Private
-
 exports.updateRestaurant=async(req,res,next)=>{
-    
     try{
         const restaurant = await Restaurant.findByIdAndUpdate(req.params.id,req.body,{
             new:true,
@@ -147,7 +128,6 @@ exports.updateRestaurant=async(req,res,next)=>{
 //@desc  Delete single Restaurants
 //@route DELETE /api/v1/Restaurants/:id
 //@access  Private
-
 exports.deleteRestaurant=async(req,res,next)=>{
     try{
         const restaurant = await Restaurant.findById(req.params.id);
