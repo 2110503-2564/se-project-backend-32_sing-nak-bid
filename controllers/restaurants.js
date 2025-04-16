@@ -27,7 +27,7 @@ console.log(reqQuery);
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g,match=>`$${match}`);
 
     //finding resource
-    query = Restaurant.find(JSON.parse(queryStr)).populate('reservations');
+    query = Restaurant.find(JSON.parse(queryStr)).populate('reservations').populate('menuItems');
 
 
     //Select Fields
