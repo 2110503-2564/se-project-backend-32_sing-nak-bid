@@ -22,7 +22,13 @@ exports.getRestaurants=async(req,res,next)=>{
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g,match=>`$${match}`);
 
     //finding resource
-    query = Restaurant.find(JSON.parse(queryStr)).populate('reservations').populate('menuItems');
+    query = Restaurant.find(JSON.parse(queryStr)).populate('reservations').populate({
+        path: 'menuItems',
+        populate: {
+          path: 'allergens',
+          model: 'Allergen'
+        }
+      });
 
     //Select Fields
     if(req.query.select){

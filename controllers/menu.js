@@ -1,12 +1,13 @@
 const MenuItem = require('../models/MenuItem');
 const Restaurant = require('../models/Restaurant');
+const Allergen = require('../models/Allergen');
 
 //@desc Get all menus from restaurant
 //@route GET /api/v1/restaurants/:restaurantId/menu
 //@access  Public 
 exports.getMenus = async (req, res, next) => {
     let query;
-    query = MenuItem.find({ restaurant: req.params.RestaurantId });
+    query = MenuItem.find({ restaurant: req.params.RestaurantId }).populate('restaurant').populate('allergens');
     try {
         const Menu = await query;
 
@@ -22,7 +23,7 @@ exports.getMenus = async (req, res, next) => {
 }
 
 
-//@desc Get all restaurants
+//@desc Get one menu from restaurant
 //@route GET /api/v1/restaurants/:restaurantId/menu/:menuId
 //@access  Public 
 exports.getMenu = async (req, res, next) => {
@@ -30,7 +31,7 @@ exports.getMenu = async (req, res, next) => {
         const Menu = await MenuItem.findById(req.params.id).populate({
             path: 'restaurant',
             select: 'name address phone'
-        });
+        }).populate('allergens');
 
         if (!Menu) {
             return res.status(404).json({ success: false, message: `No Menu with the id of ${req.params.id}` });
@@ -47,6 +48,9 @@ exports.getMenu = async (req, res, next) => {
 };
 
 
+//@desc Create Menu Item
+//@route POST /api/v1/restaurants/:restaurantId/menu
+//@access  Private
 exports.addMenuItem = async (req, res, next) => {
     try {
         req.body.restaurant = req.params.RestaurantId;
@@ -68,6 +72,9 @@ exports.addMenuItem = async (req, res, next) => {
 };
 
 
+//@desc Update Menu Item
+//@route PUT /api/v1/restaurants/:restaurantId/menu/:menuId
+//@access  Private
 exports.updateMenuItem = async (req, res, next) => {
     try {
       let menuItem = await MenuItem.findById(req.params.id);
@@ -90,6 +97,9 @@ exports.updateMenuItem = async (req, res, next) => {
   };
 
 
+//@desc Delete Menu Item
+//@route DELETE /api/v1/restaurants/:restaurantId/menu/:menuId
+//@access  Private
 exports.deleteMenuItem = async (req, res, next) => {
     try {
         const menuItem = await MenuItem.findById(req.params.id);
