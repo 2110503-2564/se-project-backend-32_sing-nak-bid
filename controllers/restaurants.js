@@ -74,7 +74,15 @@ exports.getRestaurants=async(req,res,next)=>{
                 limit
             }
         }
-        res.status(200).json({success:true , count : restaurants.length,data: restaurants});
+        console.log(req.user.id)
+        const restaurant = await Restaurant.find({ managerId: req.user.id });
+        
+        if( req.user.role === 'manager' && restaurant){
+            res.status(200).json({success:true , count : restaurant.length,data: restaurant});
+          }
+          else{
+            res.status(200).json({success:true , count : restaurants.length,data: restaurants});
+          }
     }
     
     catch(err){
