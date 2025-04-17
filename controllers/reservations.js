@@ -1,6 +1,6 @@
 const Reservation = require('../models/Reservation');
 const Restaurant = require('../models/Restaurant');
-
+const OrderBooking = require('../models/OrderBooking');
 
 exports.getReservations = async (req, res, next) => {
     let query;
@@ -9,12 +9,12 @@ exports.getReservations = async (req, res, next) => {
         query = Reservation.find({ user: req.user.id }).populate({
             path: 'restaurant',
             select: 'name address phone'
-        });
+        }).populate('orderItems');
     } else { 
         query = Reservation.find().populate({
             path: 'restaurant',
             select: 'name address phone'
-        });
+        }).populate('orderItems');
     }
     try {
         const reservations = await query;
@@ -36,7 +36,7 @@ exports.getReservation = async (req, res, next) => {
         const reservation = await Reservation.findById(req.params.id).populate({
             path: 'restaurant',
             select: 'name address phone'
-        });
+        }).populate('orderItems');
 
         if (!reservation) {
             return res.status(404).json({ success: false, message: `No reservation with the id of ${req.params.id}` });
