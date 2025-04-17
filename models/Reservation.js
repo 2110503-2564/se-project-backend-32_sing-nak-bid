@@ -24,7 +24,19 @@ const ReservationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   }
+},
+{
+  toJSON:{virtuals:true},
+  toObject:{virtuals:true}
 });
+
+ReservationSchema.virtual('orderItems', {
+  ref: 'OrderBooking',
+  localField: '_id',
+  foreignField: 'reservation',
+  justOne: false
+});
+
 
 module.exports = mongoose.model("Reservation", ReservationSchema);
 
