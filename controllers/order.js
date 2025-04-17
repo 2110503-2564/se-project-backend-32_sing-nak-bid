@@ -1,7 +1,9 @@
 const Order = require("../models/OrderBooking")
 const Reservation = require('../models/Reservation');
 
-
+//@desc Get all orders from reservation
+//@route GET /api/v1/reservations/:reservationId/order
+//@access  Public 
 exports.getOrders = async (req, res, next) =>{
     let query;
     console.log(req.params.reservationId)
