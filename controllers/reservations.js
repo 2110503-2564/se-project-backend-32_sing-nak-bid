@@ -5,13 +5,21 @@ const OrderBooking = require('../models/OrderBooking');
 exports.getReservations = async (req, res, next) => {
     let query;
     
-    if (req.user.role !== 'admin') {
+    if (req.user.role === 'user') {
         query = Reservation.find({ user: req.user.id }).populate({
             path: 'restaurant',
             select: 'name address phone'
         }).populate('orderItems');
-    } else { 
+    } else if(req.user.role === 'admin'){ 
         query = Reservation.find().populate({
+            path: 'restaurant',
+            select: 'name address phone'
+        }).populate('orderItems');
+    }
+    else {
+        const restaurant = await Restaurant.findOne({ managerId: req.user.id });
+        console.log(restaurant)
+        query = Reservation.find({restaurant:restaurant.id}).populate({
             path: 'restaurant',
             select: 'name address phone'
         }).populate('orderItems');

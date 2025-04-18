@@ -25,7 +25,7 @@ exports.getOrders = async (req, res, next) =>{
 
 //@desc Create an Order
 //@route POST /api/v1/reservations/:reservationId/order
-//@access  Public
+//@access  Private
 exports.addOrder = async (req, res, next) => {
     
     let query;
@@ -54,7 +54,7 @@ exports.addOrder = async (req, res, next) => {
 
 //@desc Delete an Order
 //@route DELETE /api/v1/reservations/:reservationId/order/:orderId
-//@access  Public
+//@access  Private
 exports.deleteOrder = async (req, res, next) => {
     try {
         const order = await Order.findById(req.params.id).populate('reservation');
