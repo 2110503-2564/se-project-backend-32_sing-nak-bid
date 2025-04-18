@@ -1,3 +1,4 @@
+const OrderBooking = require("../models/OrderBooking");
 const Order = require("../models/OrderBooking")
 const Reservation = require('../models/Reservation');
 
@@ -22,6 +23,9 @@ exports.getOrders = async (req, res, next) =>{
     }
 }
 
+//@desc Create an Order
+//@route POST /api/v1/reservations/:reservationId/order
+//@access  Public
 exports.addOrder = async (req, res, next) => {
     
     let query;
@@ -44,5 +48,32 @@ exports.addOrder = async (req, res, next) => {
     } catch (error) {
         console.log(error.stack);
         return res.status(500).json({ success: false, message: "Cannot create Order" });
+    }
+};
+
+
+//@desc Delete an Order
+//@route DELETE /api/v1/reservations/:reservationId/order/:orderId
+//@access  Public
+exports.deleteOrder = async (req, res, next) => {
+    try {
+        const order = await Order.findById(req.params.id).populate('reservation');
+        console.log(order)
+        if (!order) {
+            return res.status(404).json({ success: false, message: `No order with the id of ${req.params.id}` });
+        }
+        if(order.reservation.user.toString()!== req.user.id && req.user.role !== 'admin'){
+            return res.status(401).json({ success: false, message: `User ${req.user.id} is not authorized to delete this order`});
+          }
+
+        await order.deleteOne();
+        res.status(200).json({
+            success: true,
+            data: {}
+        });
+
+    } catch (error) {
+        console.log(error.stack);
+        return res.status(500).json({ success: false, message: "Cannot delete Reservation" });
     }
 };
