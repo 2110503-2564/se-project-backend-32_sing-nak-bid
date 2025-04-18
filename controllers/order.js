@@ -23,9 +23,16 @@ exports.getOrders = async (req, res, next) =>{
 }
 
 exports.addOrder = async (req, res, next) => {
+    
+    let query;
+    console.log(req.params.reservationId)
+    query = Order.find({ reservation: req.params.reservationId }).populate('reservation')
+
     try {
 
-        req.body.reservation = req.params.Order.Reservation;
+        req.body.reservation = req.params.reservationId;
+        console.log(req.params);
+        const reservation = await Reservation.findById(req.params.reservationId);
 
         const order = await Order.create(req.body);
 
