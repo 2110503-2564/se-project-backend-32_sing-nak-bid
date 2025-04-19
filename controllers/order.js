@@ -7,7 +7,7 @@ const Reservation = require('../models/Reservation');
 //@access  Private
 exports.getOrders = async (req, res, next) =>{
     let query;
-    query = Order.find({ user: req.user.id }).populate('reservation');
+    query = Order.find({ user: req.user.id }).populate('reservation').populate('orderItems.menuItem');;
     try {
         const order = await query;
 
@@ -28,7 +28,7 @@ exports.getOrders = async (req, res, next) =>{
 exports.getOrder = async (req, res, next) =>{
     let query;
     console.log(req.params.reservationId)
-    query = Order.findById(req.params.id).populate('reservation')
+    query = Order.findById(req.params.id).populate('reservation').populate('orderItems.menuItem');
     try {
         const order = await query;
 
@@ -80,7 +80,7 @@ exports.updateOrder = async (req, res, next) => {
             return res.status(404).json({ success: false, message: `No Order with the id of ${req.params.id}` });
           }
         if(order.reservation.user.toString()!== req.user.id && req.user.role === 'user'){
-            return res.status(401).json({ success: false, message: `User ${req.user.id} is not authorized to delete this order`});
+            return res.status(401).json({ success: false, message: `User ${req.user.id} is not authorized to update this order`});
         }
         order = await Order.findByIdAndUpdate(req.params.id, req.body, {
                 new: true,
