@@ -1,5 +1,5 @@
 const express = require('express');
-const {getRestaurant,getRestaurants,createRestaurant,updateRestaurant,deleteRestaurant}  = require('../controllers/restaurants');
+const {getRestaurant,getRestaurants,createRestaurant,updateRestaurant,deleteRestaurant,getRestaurantsUser}  = require('../controllers/restaurants');
 const router = express.Router(); 
 
 
@@ -13,6 +13,7 @@ const {protect,authorize} = require('../middleware/auth');
 router.use('/:RestaurantId/reservations/',reservationRouter);
 router.use('/:RestaurantId/menu/',menuRouter);
 router.route('/').get(protect,getRestaurants).post(protect, authorize('admin'),createRestaurant);
+router.route('/user').get(getRestaurantsUser)
 router.route('/:id').get(protect,getRestaurant).put(protect,authorize('admin'),updateRestaurant).delete(protect,authorize('admin'),deleteRestaurant);
 
 module.exports=router; 
