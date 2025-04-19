@@ -1,5 +1,7 @@
 const Restaurant = require('../models/Restaurant.js');
 const Reservation = require('../models/Reservation.js');
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 //@desc Get all restaurants
 //@route GET /api/v1/restaurants
@@ -74,15 +76,24 @@ exports.getRestaurants=async(req,res,next)=>{
                 limit
             }
         }
-        console.log(req.user.id)
-        const restaurant = await Restaurant.find({ managerId: req.user.id });
-        
-        if( req.user.role === 'manager' && restaurant){
-            res.status(200).json({success:true , count : restaurant.length,data: restaurant});
-          }
-          else{
+        let token;
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith("Bearer")
+        ) {
+            token = req.headers.authorization.split(" ")[1];
+        }
+        //Make sure token exists
+        if (!(!token || token == "null")) {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const restaurant = await Restaurant.find({ managerId: decoded.id });
+            req.user = await User.findById(decoded.id);
+            if( req.user.role === 'manager' && restaurant){
+                res.status(200).json({success:true , count : restaurant.length,data: restaurant});
+              }
+        }else{
             res.status(200).json({success:true , count : restaurants.length,data: restaurants});
-          }
+        }
     }
     
     catch(err){
