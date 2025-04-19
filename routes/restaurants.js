@@ -14,6 +14,6 @@ router.use('/:RestaurantId/reservations/',reservationRouter);
 router.use('/:RestaurantId/menu/',menuRouter);
 router.route('/').get(protect,getRestaurants).post(protect, authorize('admin'),createRestaurant);
 router.route('/user').get(getRestaurantsUser)
-router.route('/:id').get(protect,getRestaurant).put(protect,authorize('admin'),updateRestaurant).delete(protect,authorize('admin'),deleteRestaurant);
+router.route('/:id').get(getRestaurant).put(protect,authorize('admin'),updateRestaurant).delete(protect,authorize('admin'),deleteRestaurant);
 
 module.exports=router; 
