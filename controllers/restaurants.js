@@ -192,16 +192,22 @@ exports.getRestaurantsUser=async(req,res,next)=>{
 //@route GET /api/v1/restaurants/:id
 //@access  Public 
 exports.getRestaurant=async(req,res,next)=>{
-   try{
-    const restaurant = await Restaurant.findById(req.params.id);
-    
+    try{
+    const restaurant = await Restaurant.findById(req.params.id).populate('reservations').populate({
+        path: 'menuItems',
+        populate: {
+            path: 'allergens',
+            model: 'Allergen'
+        }
+    });
+
     //check if restaurant is exists in database
     if(!restaurant){
         return  res.status(400).json({success: false,messsage : `Restaurant not found with id of ${req.params.id}`});
     }
 
     res.status(200).json({success:true, data: restaurant});
-   }catch(err){
+    }catch(err){
     res.status(400).json({success: false});
 }}
 
