@@ -2,13 +2,12 @@ const OrderBooking = require("../models/OrderBooking");
 const Order = require("../models/OrderBooking")
 const Reservation = require('../models/Reservation');
 
-//@desc Get all orders from reservation
-//@route GET /api/v1/reservations/:reservationId/order
-//@access  Public
+//@desc Get all orders of the user
+//@route GET /api/v1/order
+//@access  Private
 exports.getOrders = async (req, res, next) =>{
     let query;
-    console.log(req.params.reservationId)
-    query = Order.find({ reservation: req.params.reservationId }).populate('reservation')
+    query = Order.find({ user: req.user.id }).populate('reservation');
     try {
         const order = await query;
 
@@ -50,9 +49,13 @@ exports.getOrder = async (req, res, next) =>{
 exports.addOrder = async (req, res, next) => {
     try {
         req.body.reservation = req.params.reservationId;
+        req.body.user = req.user.id;
         console.log(req.params);
-        const existedOrder = await Order.find({user:req.user.id});
-        if (existedOrder.length >= 1 && req.user.role !== 'admin') {
+        const reservation = await Reservation.findById(req.params.reservationId).populate('orderItems');
+        if(!reservation){
+            return res.status(404).json({ success: false, message: `No Reservation with the id of ${req.params.reservationId}` });
+        }
+        if (reservation.orderItems.length >= 1 && req.user.role !== 'admin') {
             return res.status(400).json({ success: false, message: `The user with ID ${req.user.id} has already made a order`});
             }
         const order = await Order.create(req.body);
