@@ -2,16 +2,29 @@ const Reservation = require('../models/Reservation');
 const Restaurant = require('../models/Restaurant');
 const OrderBooking = require('../models/OrderBooking');
 
+//@desc Get all Reservation 
+//@route GET /api/v1/reservations
+//@desc Get all Reservation for restaurant
+//@route GET /api/v1/restaurants/:RestaurantId/reservations/
+//@access  Private
 exports.getReservations = async (req, res, next) => {
     let query;
     
-    if (req.user.role !== 'admin') {
+    if (req.user.role === 'user') {
         query = Reservation.find({ user: req.user.id }).populate({
             path: 'restaurant',
             select: 'name address phone'
         }).populate('orderItems');
-    } else { 
+    } else if(req.user.role === 'admin'){ 
         query = Reservation.find().populate({
+            path: 'restaurant',
+            select: 'name address phone'
+        }).populate('orderItems');
+    }
+    else {
+        const restaurant = await Restaurant.findOne({ managerId: req.user.id });
+        console.log(restaurant)
+        query = Reservation.find({restaurant:restaurant.id}).populate({
             path: 'restaurant',
             select: 'name address phone'
         }).populate('orderItems');
@@ -30,7 +43,9 @@ exports.getReservations = async (req, res, next) => {
     }
 }
 
-
+//@desc Get a reservation
+//@route GET /api/v1/reservations/:reservationId
+//@access  Private
 exports.getReservation = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id).populate({
@@ -52,7 +67,9 @@ exports.getReservation = async (req, res, next) => {
     }
 };
 
-
+//@desc Create a reservation
+//@route POST /api/v1/restaurants/:id/reservations
+//@access  Private
 exports.addReservation = async (req, res, next) => {
     try {
         req.body.restaurant = req.params.RestaurantId;
@@ -79,7 +96,9 @@ exports.addReservation = async (req, res, next) => {
     }
 };
 
-
+//@desc Update a reservation
+//@route PUT /api/v1/reservations/:id
+//@access  Private
 exports.updateReservation = async (req, res, next) => {
     try {
       let reservation = await Reservation.findById(req.params.id);
@@ -107,7 +126,9 @@ exports.updateReservation = async (req, res, next) => {
     }
   };
 
-
+//@desc Delete a reservation
+//@route DELETE /api/v1/reservations/:id
+//@access  Private
 exports.deleteReservation = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id);

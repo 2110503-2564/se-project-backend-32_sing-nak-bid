@@ -67,7 +67,7 @@ exports.addMenuItem = async (req, res, next) => {
         });
     } catch (error) {
         console.log(error.stack);
-        return res.status(500).json({ success: false, message: "Cannot create Menu" });
+        return res.status(500).json({ success: false, message: "Cannot create MenuItem" });
     }
 };
 
