@@ -19,7 +19,7 @@ exports.getOrders = async (req, res, next) =>{
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ success: false, message: "Cannot get Menu" });
+        return res.status(500).json({ success: false, message: "Cannot get Order" });
     }
 }
 
@@ -40,7 +40,7 @@ exports.getOrder = async (req, res, next) =>{
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ success: false, message: "Cannot get Menu" });
+        return res.status(500).json({ success: false, message: "Cannot get Order" });
     }
 }
 
@@ -113,6 +113,6 @@ exports.deleteOrder = async (req, res, next) => {
 
     } catch (error) {
         console.log(error.stack);
-        return res.status(500).json({ success: false, message: "Cannot delete Reservation" });
+        return res.status(500).json({ success: false, message: "Cannot delete Order" });
     }
 };
