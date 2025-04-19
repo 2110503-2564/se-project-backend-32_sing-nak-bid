@@ -26,8 +26,8 @@ const OrderBookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["booked", "confirmed", "checked-in", "preparing", "completed", "no-show", "cancelled"],
-    default: "booked",
+    enum: ["pending","preparing", "completed", "cancelled"],
+    default: "pending",
   },
   createdAt: {
     type: Date,
