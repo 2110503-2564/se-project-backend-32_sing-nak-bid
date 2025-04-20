@@ -5,22 +5,32 @@ const Reservation = require('../models/Reservation');
 //@desc Get all orders of the user
 //@route GET /api/v1/order
 //@access  Private
-exports.getOrders = async (req, res, next) =>{
-    let query;
-    query = Order.find({ user: req.user.id }).populate('reservation').populate('orderItems.menuItem');;
-    try {
-        const order = await query;
+exports.getOrders = async (req, res, next) => {
+  try {
+    const orders = await OrderBooking.find()
+      .populate({
+        path: "reservation",
+        match: { user: req.user.id },
+      })
+      .populate("orderItems.menuItem");
 
-        res.status(200).json({
-            success: true,
-            count: order.length,
-            data: order
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ success: false, message: "Cannot get Order" });
-    }
-}
+    // Filter out orders where reservation didn't match
+    const userOrders = orders.filter(Order => Order.reservation !== null);
+
+    res.status(200).json({
+      success: true,
+      count: userOrders.length,
+      data: userOrders,
+    });
+  } catch (error) {
+    console.error("Error getting orders:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Cannot get Order",
+    });
+  }
+};
+
 
 //@desc Get an orders from reservation
 //@route GET /api/v1/reservations/:reservationId/order/:orderId
