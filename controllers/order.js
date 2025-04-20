@@ -84,7 +84,6 @@ exports.getOrder = async (req, res, next) =>{
 
         res.status(200).json({
             success: true,
-            count: order.length,
             data: order
         });
     } catch (error) {
