@@ -7,21 +7,61 @@ const Reservation = require('../models/Reservation');
 //@access  Private
 exports.getOrders = async (req, res, next) => {
   try {
-    const orders = await OrderBooking.find()
+    if(req.user.role === 'user'){
+        const orders = await OrderBooking.find()
       .populate({
         path: "reservation",
         match: { user: req.user.id },
+        populate: {
+            path: 'restaurant', // this assumes reservation has a 'restaurant' field
+          }
       })
       .populate("orderItems.menuItem");
 
     // Filter out orders where reservation didn't match
     const userOrders = orders.filter(Order => Order.reservation !== null);
-
     res.status(200).json({
-      success: true,
-      count: userOrders.length,
-      data: userOrders,
-    });
+        success: true,
+        count: userOrders.length,
+        data: userOrders,
+      });
+    }
+    else if(req.user.role === 'manager'){
+        const orders = await OrderBooking.find()
+      .populate({
+        path: "reservation",
+        populate: {
+            path: 'restaurant', // this assumes reservation has a 'restaurant' field
+            match: { managerId : req.user.id },
+          }
+      })
+      .populate("orderItems.menuItem");
+
+    // Filter out orders where reservation didn't match
+    const userOrders = orders.filter(Order => Order.reservation !== null);
+    res.status(200).json({
+        success: true,
+        count: userOrders.length,
+        data: userOrders,
+      });
+    }
+    else {
+        const orders = await OrderBooking.find()
+      .populate({
+        path: "reservation",
+        populate: {
+            path: 'restaurant', // this assumes reservation has a 'restaurant' field
+          }
+      })
+      .populate("orderItems.menuItem");
+    res.status(200).json({
+        success: true,
+        count: orders.length,
+        data: orders,
+      });
+    }
+
+    
   } catch (error) {
     console.error("Error getting orders:", error);
     return res.status(500).json({
