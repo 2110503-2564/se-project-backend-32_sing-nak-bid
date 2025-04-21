@@ -81,6 +81,9 @@ exports.updateMenuItem = async (req, res, next) => {
       if (!menuItem) {
         return res.status(404).json({ success: false, message: `No menuItem with the id of ${req.params.id}` });
       }
+       if(menuItem.stockCount<10){
+        menuItem.available = false
+       }
       menuItem = await MenuItem.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
