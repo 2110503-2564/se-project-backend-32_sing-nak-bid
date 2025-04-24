@@ -6,6 +6,11 @@ const OrderBookingSchema = new mongoose.Schema({
     ref: "Reservation",
     required: true,
   },
+  restaurant: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Restaurant",
+      required: true,
+  },
   checkInStatus: {
     type: Boolean,
     default: false,

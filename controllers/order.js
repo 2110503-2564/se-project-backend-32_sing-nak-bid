@@ -1,6 +1,7 @@
 const OrderBooking = require("../models/OrderBooking");
 const Order = require("../models/OrderBooking")
 const Reservation = require('../models/Reservation');
+const Restaurant = require('../models/Restaurant')
 
 //@desc Get all orders of the user
 //@route GET /api/v1/order
@@ -11,10 +12,7 @@ exports.getOrders = async (req, res, next) => {
         const orders = await OrderBooking.find()
       .populate({
         path: "reservation",
-        match: { user: req.user.id },
-        populate: {
-            path: 'restaurant', // this assumes reservation has a 'restaurant' field
-          }
+        match: { user: req.user.id }
       })
       .populate("orderItems.menuItem");
 
@@ -27,18 +25,19 @@ exports.getOrders = async (req, res, next) => {
       });
     }
     else if(req.user.role === 'manager'){
-        const orders = await OrderBooking.find()
+      const orders = await OrderBooking.find()
       .populate({
-        path: "reservation",
-        populate: {
-            path: 'restaurant', // this assumes reservation has a 'restaurant' field
-            match: { managerId : req.user.id },
-          }
+        path: "restaurant", // This should now include the restaurant in menuItem
+          match: { managerId: req.user.id }
       })
-      .populate("orderItems.menuItem");
-
-    // Filter out orders where reservation didn't match
-    const userOrders = orders.filter(Order => Order.reservation !== null);
+      .populate("reservation");
+    
+    // Filter orders where **any** item belongs to the manager's restaurant
+    const userOrders = orders.filter(order =>
+      order.orderItems.some(oi => oi.menuItem?.restaurant !== null)
+    );
+    
+    
     res.status(200).json({
         success: true,
         count: userOrders.length,
@@ -101,6 +100,7 @@ exports.addOrder = async (req, res, next) => {
         req.body.user = req.user.id;
         console.log(req.params);
         const reservation = await Reservation.findById(req.params.reservationId).populate('orderItems');
+        req.body.restaurant = reservation.restaurant;
         if(!reservation){
             return res.status(404).json({ success: false, message: `No Reservation with the id of ${req.params.reservationId}` });
         }
