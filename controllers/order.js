@@ -26,16 +26,15 @@ exports.getOrders = async (req, res, next) => {
     }
     else if(req.user.role === 'manager'){
       const orders = await OrderBooking.find()
-      .populate({
-        path: "restaurant", // This should now include the restaurant in menuItem
-          match: { managerId: req.user.id }
-      })
-      .populate("reservation");
-    
-    // Filter orders where **any** item belongs to the manager's restaurant
-    const userOrders = orders.filter(order =>
-      order.orderItems.some(oi => oi.menuItem?.restaurant !== null)
-    );
+  .populate({
+    path: "restaurant",
+    match: { managerId: req.user.id },
+  })
+  .populate("reservation");
+
+// Filter out orders where restaurant is null
+const userOrders = orders.filter(order => order.restaurant !== null);
+
     
     
     res.status(200).json({
