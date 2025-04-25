@@ -1,4 +1,4 @@
-const Rating = require("../model/Rating")
+const Rating = require("../models/Rating")
 const Reservation = require('../models/Reservation');
 const Restaurant = require('../models/Restaurant')
 
@@ -113,11 +113,11 @@ exports.deleteRating = async (req, res, next) => {
             return res.status(401).json({ success: false, message: `User ${req.user.id} is not authorized to delete this order`});
         }
 
-        await order.deleteOne();
-        res.status(200).json({
-            success: true,
-            data: {}
-        });
+//         await order.deleteOne();
+//         res.status(200).json({
+//             success: true,
+//             data: {}
+//         });
 
     } catch (error) {
         console.log(error.stack);
