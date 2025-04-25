@@ -30,7 +30,7 @@ exports.getMenu = async (req, res, next) => {
     try {
         const Menu = await MenuItem.findById(req.params.id).populate({
             path: 'restaurant',
-            select: 'name address phone'
+            select: 'name address tel'
         }).populate('allergens');
 
         if (!Menu) {

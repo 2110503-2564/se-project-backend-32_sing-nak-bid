@@ -46,12 +46,9 @@ const userOrders = orders.filter(order => order.restaurant !== null);
     else {
         const orders = await OrderBooking.find()
       .populate({
-        path: "reservation",
-        populate: {
-            path: 'restaurant', // this assumes reservation has a 'restaurant' field
-          }
+        path: "reservation"
       })
-      .populate("orderItems.menuItem");
+      .populate("orderItems.menuItem").populate("restaurant");
     res.status(200).json({
         success: true,
         count: orders.length,
