@@ -13,12 +13,12 @@ exports.getReservations = async (req, res, next) => {
     if (req.user.role === 'user') {
         query = Reservation.find({ user: req.user.id }).populate({
             path: 'restaurant',
-            select: 'name address phone'
+            select: 'name address tel'
         }).populate('orderItems');
     } else if(req.user.role === 'admin'){ 
         query = Reservation.find().populate({
             path: 'restaurant',
-            select: 'name address phone'
+            select: 'name address tel'
         }).populate('orderItems');
     }
     else {
@@ -26,7 +26,7 @@ exports.getReservations = async (req, res, next) => {
         console.log(restaurant)
         query = Reservation.find({restaurant:restaurant.id}).populate({
             path: 'restaurant',
-            select: 'name address phone'
+            select: 'name address tel'
         }).populate('orderItems');
     }
     try {
@@ -50,7 +50,7 @@ exports.getReservation = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id).populate({
             path: 'restaurant',
-            select: 'name address phone'
+            select: 'name address tel'
         }).populate('orderItems');
 
         if (!reservation) {
