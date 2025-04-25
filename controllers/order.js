@@ -14,7 +14,7 @@ exports.getOrders = async (req, res, next) => {
         path: "reservation",
         match: { user: req.user.id }
       })
-      .populate("orderItems.menuItem");
+      .populate("orderItems.menuItem").populate('restaurant');
 
     // Filter out orders where reservation didn't match
     const userOrders = orders.filter(Order => Order.reservation !== null);
@@ -76,7 +76,7 @@ const userOrders = orders.filter(order => order.restaurant !== null);
 exports.getOrder = async (req, res, next) =>{
     let query;
     console.log(req.params.reservationId)
-    query = Order.findById(req.params.id).populate('reservation').populate('orderItems.menuItem');
+    query = Order.findById(req.params.id).populate('reservation').populate('orderItems.menuItem').populate('restaurant');
     try {
         const order = await query;
 
