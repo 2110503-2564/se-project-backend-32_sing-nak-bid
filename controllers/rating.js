@@ -103,7 +103,7 @@ exports.updateRating = async (req, res, next) => {
 
 
 //@desc Delete a Rating
-//@route DELETE /api/v1/reservations/:reservationId/rating/:ratingId
+//@route DELETE /api/v1/restaurants/:restuarantId/rating/:ratingId
 //@access  Private
 exports.deleteRating = async (req, res, next) => {
     try {
