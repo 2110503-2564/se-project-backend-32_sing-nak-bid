@@ -3,7 +3,9 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const cors = require("cors");
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerSpec = require('./swagger');
 dotenv.config({ path: "./config/config.env" });
 
 connectDB();
@@ -17,7 +19,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1/restaurants", restaurants);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/reservations", reservations);
