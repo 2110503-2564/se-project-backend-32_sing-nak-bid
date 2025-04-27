@@ -43,6 +43,7 @@
  *     description: API for managing reservations
  */
 
+
 /**
  * @swagger
  * /reservations:
@@ -52,6 +53,23 @@
  *     responses:
  *       200:
  *         description: A list of reservations
+ */
+/**
+ * @swagger
+ * /restaurants/{id}/reservations:
+ *   get:
+ *     summary: Get all reservations for restaurant
+ *     tags: [Reservations]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The reservation id
+ *     responses:
+ *       200:
+ *         description: A list of reservations for restaurant
  */
 /**
  * @swagger
@@ -74,16 +92,23 @@
  */
 /**
  * @swagger
- * /reservations:
+ * /restaurants/{id}/reservations:
  *   post:
  *     summary: Create a new reservation
  *     tags: [Reservations]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The restaurant id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Restaurant'
+ *             $ref: '#/components/schemas/Reservation'
  *     responses:
  *       201:
  *         description: The reservations was successfully created
@@ -127,7 +152,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Restaurant'
+ *             $ref: '#/components/schemas/Reservation'
  *     responses:
  *       200:
  *         description: The reservations was updated

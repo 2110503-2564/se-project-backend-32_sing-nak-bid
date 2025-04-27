@@ -9,39 +9,59 @@ const OrderBooking = require('../models/OrderBooking');
 //@access  Private
 exports.getReservations = async (req, res, next) => {
     let query;
-    
+
     if (req.user.role === 'user') {
-        query = Reservation.find({ user: req.user.id }).populate({
-            path: 'restaurant',
-            select: 'name address tel'
-        }).populate('orderItems');
-    } else if(req.user.role === 'admin'){ 
-        query = Reservation.find().populate({
-            path: 'restaurant',
-            select: 'name address tel'
-        }).populate('orderItems');
-    }
-    else {
+        query = Reservation.find({ user: req.user.id })
+            .populate({
+                path: 'restaurant',
+                select: 'name address tel'
+            });
+    } else if (req.user.role === 'admin') {
+        query = Reservation.find()
+            .populate({
+                path: 'restaurant',
+                select: 'name address tel'
+            });
+    } else {
         const restaurant = await Restaurant.findOne({ managerId: req.user.id });
-        console.log(restaurant)
-        query = Reservation.find({restaurant:restaurant.id}).populate({
-            path: 'restaurant',
-            select: 'name address tel'
-        }).populate('orderItems');
+        query = Reservation.find({ restaurant: restaurant.id })
+            .populate({
+                path: 'restaurant',
+                select: 'name address tel'
+            });
     }
+
     try {
         const reservations = await query;
+
+        // Find related orderBookings
+        const reservationIds = reservations.map(r => r._id);
+
+        const orderBookings = await OrderBooking.find({ reservation: { $in: reservationIds } })
+            .populate({
+                path: 'orderItems.menuItem'
+            });
+
+        // Attach orderBookings to each reservation
+        const reservationsWithOrders = reservations.map(reservation => {
+            const orders = orderBookings.filter(ob => ob.reservation.toString() === reservation._id.toString());
+            return {
+                ...reservation.toObject(),
+                orders: orders
+            };
+        });
 
         res.status(200).json({
             success: true,
             count: reservations.length,
-            data: reservations
+            data: reservationsWithOrders
         });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ success: false, message: "Cannot find Reservation" });
     }
 }
+
 
 //@desc Get a reservation
 //@route GET /api/v1/reservations/:reservationId
