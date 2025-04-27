@@ -61,9 +61,21 @@ const RestaurantSchema = new mongoose.Schema(
     },
     ratings: [
       {
-        type: mongoose.Schema.ObjectId,
-        ref: "Rating",
-      },
+        user: {
+          type: mongoose.Schema.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        score: {
+          type: Number,
+          required: true,
+          min: 1,
+          max: 5,
+        },
+        comment: {
+          type: String,
+        },
+      }
     ],
     averageRating: {
       type: Number,

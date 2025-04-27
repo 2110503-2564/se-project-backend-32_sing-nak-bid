@@ -6,100 +6,118 @@ const Restaurant = require('../models/Restaurant')
 //@route GET /api/v1/restaurants/:restaurantId/rating
 //@access  Public
 exports.getRatings = async (req, res, next) => {
-  try {
-    const rating = await Rating.find({restaurant:req.params.RestaurantId}).populate({
-        path: 'restaurant',
-        select: 'name address phone'
-    });
-    console.log(req.params.RestaurantId)
-    return res.status(200).json({
+    try {
+      const restaurant = await Restaurant.findById(req.params.RestaurantId).select('ratings');
+      if (!restaurant) {
+        return res.status(404).json({ success: false, message: 'Restaurant not found' });
+      }
+      res.status(200).json({
         success: true,
-        count : rating.length,
-        data : rating
+        count: restaurant.ratings.length,
+        data: restaurant.ratings
       });
-  } catch (error) {
-    console.error("Error getting ratings:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Cannot get Rating",
-    });
-  }
-};
+    } catch (error) {
+      console.error(error.stack);
+      return res.status(500).json({ success: false, message: "Cannot get ratings" });
+    }
+  };
+  
 
 
 //@desc Get one rating of the user
 //@route GET /api/v1/restaurants/:restaurantId/rating/:ratingId
 //@access  Public
-exports.getRating = async (req, res, next) =>{
-    let query;
-    console.log(req.params.RestaurantId)
-    query = Rating.findById(req.params.id).populate({
-        path: 'restaurant',
-        select: 'name address phone'
-    });
+exports.getRating = async (req, res, next) => {
     try {
-        const rating = await query;
-
-        res.status(200).json({
-            success: true,
-            data: rating
-        });
+      const restaurant = await Restaurant.findById(req.params.RestaurantId).select('ratings');
+      if (!restaurant) {
+        return res.status(404).json({ success: false, message: 'Restaurant not found' });
+      }
+  
+      const rating = restaurant.ratings.id(req.params.ratingId);
+  
+      if (!rating) {
+        return res.status(404).json({ success: false, message: 'Rating not found' });
+      }
+  
+      res.status(200).json({
+        success: true,
+        data: rating
+      });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ success: false, message: "Cannot get Rating" });
+      console.error(error.stack);
+      return res.status(500).json({ success: false, message: "Cannot get rating" });
     }
-}
+  };
+  
 
 //@desc Create a Rating
 //@route POST /api/v1/restaurants/:restaurantId/rating
 //@access  Private
 exports.addRating = async (req, res, next) => {
     try {
-        req.body.restaurant = req.params.RestaurantId;
-        req.body.user = req.user.id;
-        const restaurant = await Restaurant.findById(req.params.RestaurantId);
-        if(!restaurant){
-            return res.status(404).json({ success: false, message: `No Restaurant with the id of ${req.params.RestaurantId}` });
-        } 
-        console.log(req.params.RestaurantId);
-        const rating = await Rating.create(req.body);
-        res.status(200).json({
-            success: true,
-            data: rating
-        });
-
+      const restaurant = await Restaurant.findById(req.params.RestaurantId);
+      if (!restaurant) {
+        return res.status(404).json({ success: false, message: 'Restaurant not found' });
+      }
+  
+      const newRating = {
+        user: req.user.id,
+        score: req.body.score,
+        comment: req.body.comment
+      };
+  
+      restaurant.ratings.push(newRating);
+      await restaurant.save();
+  
+      res.status(201).json({
+        success: true,
+        data: newRating
+      });
     } catch (error) {
-        console.log(error.stack);
-        return res.status(500).json({ success: false, message: "Cannot create Rating" });
+      console.error(error.stack);
+      return res.status(500).json({ success: false, message: "Cannot add rating" });
     }
-};
+  };
+  
+  
+  
 
 //@desc Update a Rating
 //@route PUT /api/v1/restaurants/:restaurantId/rating/:ratingId
 //@access  Private
 exports.updateRating = async (req, res, next) => {
     try {
-        let rating = await Rating.findById(req.params.id).populate('restaurant')
-        if (!rating) {
-            return res.status(404).json({ success: false, message: `No Rating with the id of ${req.params.id}` });
-        }
-        if(rating.user.toString() !== req.user.id){
-            return res.status(401).json({ success: false, message: `User ${req.user.id} is not authorized to update this order`});
-        }
-        rating = await Rating.findByIdAndUpdate(req.params.id, req.body, {
-                new: true,
-                runValidators: true
-              });
-        res.status(200).json({
-            success: true,
-            data: rating
-        });
-
+      const restaurant = await Restaurant.findById(req.params.RestaurantId);
+      if (!restaurant) {
+        return res.status(404).json({ success: false, message: 'Restaurant not found' });
+      }
+  
+      const rating = restaurant.ratings.id(req.params.ratingId);
+      if (!rating) {
+        return res.status(404).json({ success: false, message: 'Rating not found' });
+      }
+  
+      if (rating.user.toString() !== req.user.id) {
+        return res.status(401).json({ success: false, message: 'Not authorized to update this rating' });
+      }
+  
+      // Update fields
+      if (req.body.score !== undefined) rating.score = req.body.score;
+      if (req.body.comment !== undefined) rating.comment = req.body.comment;
+  
+      await restaurant.save();
+  
+      res.status(200).json({
+        success: true,
+        data: rating
+      });
     } catch (error) {
-        console.log(error.stack);
-        return res.status(500).json({ success: false, message: "Cannot update Rating" });
+      console.error(error.stack);
+      return res.status(500).json({ success: false, message: "Cannot update rating" });
     }
-};
+  };
+  
 
 
 //@desc Delete a Rating
@@ -107,24 +125,27 @@ exports.updateRating = async (req, res, next) => {
 //@access  Private
 exports.deleteRating = async (req, res, next) => {
     try {
-        const rating = await Rating.findById(req.params.id).populate('restaurant');
-        console.log(rating)
-        if (!rating) {
-            return res.status(404).json({ success: false, message: `No rating with the id of ${req.params.id}` });
-        }
-        if(rating.user.toString()!== req.user.id && req.user.role === 'user'){
-            return res.status(401).json({ success: false, message: `User ${req.user.id} is not authorized to delete this order`});
-        }
-
-        await rating.deleteOne();
-        
-        res.status(200).json({
-            success: true,
-            data: {}
-        });
-
+      const restaurant = await Restaurant.findById(req.params.RestaurantId);
+      if (!restaurant) {
+        return res.status(404).json({ success: false, message: 'Restaurant not found' });
+      }
+  
+      const rating = restaurant.ratings.id(req.params.ratingId);
+      if (!rating) {
+        return res.status(404).json({ success: false, message: 'Rating not found' });
+      }
+  
+      if (rating.user.toString() !== req.user.id && req.user.role === 'user') {
+        return res.status(401).json({ success: false, message: 'Not authorized to delete this rating' });
+      }
+  
+      rating.remove();
+      await restaurant.save();
+  
+      res.status(200).json({ success: true, data: {} });
     } catch (error) {
-        console.log(error.stack);
-        return res.status(500).json({ success: false, message: "Cannot delete Rating" });
+      console.error(error.stack);
+      return res.status(500).json({ success: false, message: "Cannot delete rating" });
     }
-};
+  };
+  
