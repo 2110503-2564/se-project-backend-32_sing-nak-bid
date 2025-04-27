@@ -50,6 +50,9 @@ const OrderBookingSchema = new mongoose.Schema({
         ref: "MenuItem",
         required: true,
       },
+      menuName:{
+        type: String
+      },
       quantity: {
         type: Number,
         required: true,
