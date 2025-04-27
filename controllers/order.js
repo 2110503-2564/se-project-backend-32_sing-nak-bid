@@ -100,7 +100,10 @@ exports.addOrder = async (req, res, next) => {
         if(!reservation){
             return res.status(404).json({ success: false, message: `No Reservation with the id of ${req.params.reservationId}` });
         }
-        if (reservation.orderItems.length >= 1 && req.user.role !== 'admin') {
+        if(reservation.user.toString !== req.user.id){
+            return res.status(400).json({ success: false, message: `The user with ID ${req.user.id} cant made a order`});
+        }
+        if (reservation.orderItems.length >= 1) {
             return res.status(400).json({ success: false, message: `The user with ID ${req.user.id} has already made a order`});
             }
         const order = await Order.create(req.body);
