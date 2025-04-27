@@ -101,6 +101,13 @@
  *   get:
  *     summary: Get a restaurant
  *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The restaurant id
  *     responses:
  *       200:
  *         description: A restaurants description by id
@@ -110,4 +117,68 @@
  *               $ref: '#/components/schemas/Restaurant'
  *       404:
  *         description: The restautant was not found
+ */
+/**
+ * @swagger
+ * /restaurants:
+ *   post:
+ *     summary: Create a new restaurant
+ *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Restaurant'
+ *     responses:
+ *       201:
+ *         description: The restaurants was successfully created
+ *       500:
+ *         description: Some error happened
+ */
+/**
+ * @swagger
+ * /restaurants/{id}:
+ *   delete:
+ *     summary: Delete a restaurant
+ *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The restaurant id
+ *     responses:
+ *       200:
+ *         description: The restaurants was deleted
+ *       404:
+ *         description: The restautant was not found
+ */
+/**
+ * @swagger
+ * /restaurants/{id}:
+ *   put:
+ *     summary: Update a restaurant
+ *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The restaurant id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Restaurant'
+ *     responses:
+ *       200:
+ *         description: The restaurants was updated
+ *       404:
+ *         description: The restautant was not found
+ *       500:
+ *         description: Some error happened
  */
