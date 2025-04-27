@@ -29,6 +29,9 @@ const OrderBookingSchema = new mongoose.Schema({
     required: true,
     match: /^[0-9]{9,15}$/,
   },
+  emailUser:{
+    type: String
+  },
   status: {
     type: String,
     enum: ["pending","preparing", "completed", "cancelled"],
