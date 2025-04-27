@@ -15,20 +15,20 @@ exports.getReservations = async (req, res, next) => {
             .populate({
                 path: 'restaurant',
                 select: 'name address tel'
-            });
+            }).populate('orderItems');
     } else if (req.user.role === 'admin') {
         query = Reservation.find()
             .populate({
                 path: 'restaurant',
                 select: 'name address tel'
-            });
+            }).populate('orderItems');
     } else {
         const restaurant = await Restaurant.findOne({ managerId: req.user.id });
         query = Reservation.find({ restaurant: restaurant.id })
             .populate({
                 path: 'restaurant',
                 select: 'name address tel'
-            });
+            }).populate('orderItems');
     }
 
     try {
