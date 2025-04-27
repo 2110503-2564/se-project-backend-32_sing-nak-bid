@@ -88,12 +88,6 @@
  *     responses:
  *       200:
  *         description: A list of restaurants
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Restaurant'
  */
 /**
  * @swagger
@@ -111,10 +105,6 @@
  *     responses:
  *       200:
  *         description: A restaurants description by id
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Restaurant'
  *       404:
  *         description: The restautant was not found
  */
