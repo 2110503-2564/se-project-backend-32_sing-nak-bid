@@ -1,4 +1,3 @@
-const Rating = require("../models/Rating")
 const Reservation = require('../models/Reservation');
 const Restaurant = require('../models/Restaurant')
 

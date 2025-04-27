@@ -59,6 +59,9 @@ exports.addMenuItem = async (req, res, next) => {
         if (!restaurant) {
             return res.status(404).json({ success: false, message: `No restaurant with the id of ${req.params.RestaurantId}` });
         }
+        if(req.body.stockCount<10){
+            req.body.available = false
+           }
         const menuitem = await MenuItem.create(req.body);
 
         res.status(200).json({

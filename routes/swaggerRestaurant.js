@@ -2,6 +2,28 @@
  * @swagger
  * components:
  *   schemas:
+ *     Rating:
+ *       type: object
+ *       properties:
+ *         user:
+ *           type: string
+ *           description: User ID who gave the rating
+ *         score:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 5
+ *           description: Rating score (1-5)
+ *         comment:
+ *           type: string
+ *           description: Optional comment for the rating
+ *       required:
+ *         - user
+ *         - score
+ *       example:
+ *         user: "680e0c1447829f05e0cba123"
+ *         score: 5
+ *         comment: "Amazing food!"
+
  *     Restaurant:
  *       type: object
  *       properties:
@@ -10,8 +32,8 @@
  *           description: Auto-generated MongoDB ObjectId
  *         name:
  *           type: string
- *           maxLength: 50
  *           description: Restaurant name
+ *           maxLength: 50
  *         address:
  *           type: string
  *           description: Restaurant address
@@ -41,35 +63,46 @@
  *           description: Closing time (HH:mm format)
  *         managerId:
  *           type: string
- *           description: Manager's User ID (ObjectId)
+ *           description: Manager's User ID
  *         picture:
  *           type: string
  *           description: URL to restaurant picture
  *         ratings:
  *           type: array
+ *           description: List of ratings
  *           items:
- *             type: string
- *             description: Rating IDs (ObjectIds)
+ *             $ref: '#/components/schemas/Rating'
  *         averageRating:
  *           type: number
  *           format: float
  *           default: 0
  *           description: Average rating score
+ *       required:
+ *         - name
+ *         - address
+ *         - distinct
+ *         - province
+ *         - postalcode
+ *         - tel
+ *         - region
+ *         - opentime
+ *         - closetime
+ *         - managerId
  *       example:
- *         id: 6800ab45f3ba9b608b7eed0e
- *         name: Louisvanich
- *         address: 1642 Banthat Thong Rd Subdistrict Rong Muang
- *         distinct: Pathumwan
- *         province: Bangkok
- *         postalcode: 10330
- *         tel: 063-993-6550
- *         region: Central
- *         opentime: 12:00
- *         closetime: 23:00
- *         managerId: 6800ab13f3ba9b608b7eed09
- *         picture: picture_url
+ *         id: "680e0c1447829f05e0cba964"
+ *         name: "Louisvanich"
+ *         address: "1642 Banthat Thong Rd"
+ *         district: "Pathumwan"
+ *         province: "Bangkok"
+ *         postalcode: "10330"
+ *         tel: "063-993-6550"
+ *         region: "Central"
+ *         opentime: "12:00"
+ *         closetime: "23:00"
+ *         managerId: "680e0c0b47829f05e0cba961"
+ *         picture: "http://example.com/picture.jpg"
  *         ratings: []
- *         averageRating: 4.7
+ *         averageRating: 4.5
  */
 
 /**
@@ -84,7 +117,7 @@
  * /restaurants:
  *   get:
  *     summary: Get all restaurants
- *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Restaurants]   
  *     responses:
  *       200:
  *         description: A list of restaurants
@@ -94,7 +127,7 @@
  * /restaurants/{id}:
  *   get:
  *     summary: Get a restaurant
- *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Restaurants]  
  *     parameters:
  *       - in: path
  *         name: id
@@ -113,7 +146,9 @@
  * /restaurants:
  *   post:
  *     summary: Create a new restaurant
- *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Restaurants]   
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -131,7 +166,9 @@
  * /restaurants/{id}:
  *   delete:
  *     summary: Delete a restaurant
- *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Restaurants]  
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -150,7 +187,9 @@
  * /restaurants/{id}:
  *   put:
  *     summary: Update a restaurant
- *     tags: [Restaurants]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Restaurants]   
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

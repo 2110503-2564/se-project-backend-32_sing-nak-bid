@@ -49,34 +49,22 @@
  * /reservations:
  *   get:
  *     summary: Get all reservations
- *     tags: [Reservations]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Reservations]   
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of reservations
  */
-/**
- * @swagger
- * /restaurants/{id}/reservations:
- *   get:
- *     summary: Get all reservations for restaurant
- *     tags: [Reservations]   # <-- Tell Swagger this route belongs to the Restaurants tag
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The reservation id
- *     responses:
- *       200:
- *         description: A list of reservations for restaurant
- */
+
 /**
  * @swagger
  * /reservations/{id}:
  *   get:
  *     summary: Get a reservation
- *     tags: [Reservations]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Reservations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -95,7 +83,9 @@
  * /restaurants/{id}/reservations:
  *   post:
  *     summary: Create a new reservation
- *     tags: [Reservations]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Reservations]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -120,7 +110,9 @@
  * /reservations/{id}:
  *   delete:
  *     summary: Delete a reservation
- *     tags: [Reservations]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Reservations]   
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -139,7 +131,9 @@
  * /reservations/{id}:
  *   put:
  *     summary: Update a reservation
- *     tags: [Reservations]   # <-- Tell Swagger this route belongs to the Restaurants tag
+ *     tags: [Reservations]  
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
