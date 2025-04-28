@@ -49,19 +49,81 @@
  * /reservations:
  *   get:
  *     summary: Get all reservations
- *     tags: [Reservations]   
+ *     tags: [Reservations]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of reservations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 count:
+ *                   type: integer
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                       reservationDateTime:
+ *                         type: string
+ *                         format: date-time
+ *                       user:
+ *                         type: string
+ *                       restaurant:
+ *                         type: object
+ *                         properties:
+ *                           _id:
+ *                             type: string
+ *                           name:
+ *                             type: string
+ *                           address:
+ *                             type: string
+ *                           tel:
+ *                             type: string
+ *                       status:
+ *                         type: string
+ *                         enum: [pending, preparing, completed, cancelled]
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                       orderItems:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                       orders:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *             example:
+ *               success: true
+ *               count: 1
+ *               data:
+ *                 - _id: "680f582ab34389ffa1ebd6a4"
+ *                   reservationDateTime: "2025-03-10T00:00:00.000Z"
+ *                   user: "680e33e61fa675ed398adf75"
+ *                   restaurant:
+ *                     _id: "680e0c1447829f05e0cba964"
+ *                     name: "DEMO"
+ *                     address: "123"
+ *                     tel: "123-456-7890"
+ *                   status: "pending"
+ *                   createdAt: "2025-04-28T10:27:54.108Z"
+ *                   orderItems: []
+ *                   orders: []
  */
 
 /**
  * @swagger
  * /reservations/{id}:
  *   get:
- *     summary: Get a reservation
+ *     summary: Get a reservation by ID
  *     tags: [Reservations]
  *     security:
  *       - bearerAuth: []
@@ -71,13 +133,71 @@
  *         schema:
  *           type: string
  *         required: true
- *         description: The reservation id
+ *         description: The reservation ID
  *     responses:
  *       200:
- *         description: A reservations description by id
+ *         description: A reservation description by ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     reservationDateTime:
+ *                       type: string
+ *                       format: date-time
+ *                     user:
+ *                       type: string
+ *                     restaurant:
+ *                       type: object
+ *                       properties:
+ *                         _id:
+ *                           type: string
+ *                         name:
+ *                           type: string
+ *                         address:
+ *                           type: string
+ *                         tel:
+ *                           type: string
+ *                     status:
+ *                       type: string
+ *                       enum: [pending, preparing, completed, cancelled]
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     orderItems:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                     orders:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: "680f582ab34389ffa1ebd6a4"
+ *                 reservationDateTime: "2025-03-10T00:00:00.000Z"
+ *                 user: "680e33e61fa675ed398adf75"
+ *                 restaurant:
+ *                   _id: "680e0c1447829f05e0cba964"
+ *                   name: "DEMO"
+ *                   address: "123"
+ *                   tel: "123-456-7890"
+ *                 status: "pending"
+ *                 createdAt: "2025-04-28T10:27:54.108Z"
+ *                 orderItems: []
+ *                 orders: []
  *       404:
  *         description: The reservation was not found
  */
+
 /**
  * @swagger
  * /restaurants/{id}/reservations:
@@ -101,16 +221,21 @@
  *             $ref: '#/components/schemas/Reservation'
  *     responses:
  *       201:
- *         description: The reservations was successfully created
+ *         description: The reservation was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Reservation'
  *       500:
  *         description: Some error happened
  */
+
 /**
  * @swagger
  * /reservations/{id}:
  *   delete:
  *     summary: Delete a reservation
- *     tags: [Reservations]   
+ *     tags: [Reservations]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -122,16 +247,30 @@
  *         description: The reservation id
  *     responses:
  *       200:
- *         description: The reservations was deleted
+ *         description: The reservation was deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties: {}
+ *             example:
+ *               success: true
+ *               data: {}
  *       404:
- *         description: The restautant was not found
+ *         description: The reservation was not found
  */
+
 /**
  * @swagger
  * /reservations/{id}:
  *   put:
  *     summary: Update a reservation
- *     tags: [Reservations]  
+ *     tags: [Reservations]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -149,9 +288,13 @@
  *             $ref: '#/components/schemas/Reservation'
  *     responses:
  *       200:
- *         description: The reservations was updated
+ *         description: The reservation was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Reservation'
  *       404:
- *         description: The restautant was not found
+ *         description: The reservation was not found
  *       500:
  *         description: Some error happened
  */
