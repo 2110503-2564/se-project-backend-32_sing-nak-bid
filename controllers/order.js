@@ -100,8 +100,8 @@ exports.addOrder = async (req, res, next) => {
         if(!reservation){
             return res.status(404).json({ success: false, message: `No Reservation with the id of ${req.params.reservationId}` });
         }
-        if(reservation.user.toString !== req.user.id){
-            return res.status(400).json({ success: false, message: `The user with ID ${req.user.id} cant made a order`});
+        if(reservation.user != req.user.id){
+            return res.status(400).json({ success: false, message: `The user with ID ${req.user.id} cant made a order with ${reservation.user}`});
         }
         if (reservation.orderItems.length >= 1) {
             return res.status(400).json({ success: false, message: `The user with ID ${req.user.id} has already made a order`});
