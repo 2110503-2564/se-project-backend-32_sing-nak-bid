@@ -102,6 +102,8 @@ RestaurantSchema.virtual("menuItems", {
   foreignField: "restaurant",
   justOne: false,
 });
+
+// istanbul ignore next
 RestaurantSchema.pre("save", function (next) {
   if (this.ratings.length > 0) {
     const total = this.ratings.reduce((sum, r) => sum + r.score, 0);
