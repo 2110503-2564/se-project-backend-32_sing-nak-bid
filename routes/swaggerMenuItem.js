@@ -54,7 +54,7 @@
  *         name: "Spaghetti Carbonara"
  *         price: 150
  *         description: "Creamy pasta with bacon and cheese sauce."
- *         allergens: ["680e0c1447829f05e0cbaaaa"]
+ *         allergens: []
  *         restaurant: "680e0c1447829f05e0cba123"
  *         available: true
  *         recommended: true
@@ -96,10 +96,44 @@
  *                 data:
  *                   type: array
  *                   items:
- *                     type: object
+ *                     $ref: '#/components/schemas/MenuItem'
+ *             example:
+ *               success: true
+ *               count: 1
+ *               data:
+ *                 - _id: "6803a1fa6a859343db1021d5"
+ *                   name: "Fried Squid Eggs with Fish Sauce"
+ *                   price: 180
+ *                   description: "Squid eggs fried to perfection and seasoned with aromatic fish sauce."
+ *                   allergens:
+ *                     - _id: "680010ea26d2f5398eea28d4"
+ *                       name: "Seafood"
+ *                       description: "Might contain shellfish and fish such as shrimp, crab, lobster, squid, oyster, mussels, clams, anchovies, or fish sauce, etc."
+ *                   restaurant:
+ *                     _id: "6800ab45f3ba9b608b7eed0e"
+ *                     name: "Louisvanich"
+ *                     address: "1642 Banthat Thong Rd Subdistrict Rong Muang"
+ *                     district: "Pathumwan"
+ *                     province: "Bangkok"
+ *                     postalcode: "10330"
+ *                     tel: "063-993-6550"
+ *                     region: "Central"
+ *                     opentime: "12:00"
+ *                     closetime: "23:00"
+ *                     managerId: "6800ab13f3ba9b608b7eed09"
+ *                   available: true
+ *                   recommended: true
+ *                   orderCount: 0
+ *                   stockCount: 50
  *       500:
  *         description: Cannot get Menu
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               error: "Cannot get Menu"
  */
+
 
 /**
  * @swagger
@@ -132,11 +166,105 @@
  *                   type: boolean
  *                 data:
  *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     price:
+ *                       type: integer
+ *                     description:
+ *                       type: string
+ *                     allergens:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           _id:
+ *                             type: string
+ *                           name:
+ *                             type: string
+ *                           description:
+ *                             type: string
+ *                     restaurant:
+ *                       type: object
+ *                       properties:
+ *                         _id:
+ *                           type: string
+ *                         name:
+ *                           type: string
+ *                         address:
+ *                           type: string
+ *                         district:
+ *                           type: string
+ *                         province:
+ *                           type: string
+ *                         postalcode:
+ *                           type: string
+ *                         tel:
+ *                           type: string
+ *                         region:
+ *                           type: string
+ *                         opentime:
+ *                           type: string
+ *                         closetime:
+ *                           type: string
+ *                         managerId:
+ *                           type: string
+ *                     available:
+ *                       type: boolean
+ *                     recommended:
+ *                       type: boolean
+ *                     orderCount:
+ *                       type: integer
+ *                     stockCount:
+ *                       type: integer
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: "6803a1fa6a859343db1021d5"
+ *                 name: "Fried Squid Eggs with Fish Sauce"
+ *                 price: 180
+ *                 description: "Squid eggs fried to perfection and seasoned with aromatic fish sauce."
+ *                 allergens:
+ *                   - _id: "680010ea26d2f5398eea28d4"
+ *                     name: "Seafood"
+ *                     description: "Might contain shellfish and fish such as shrimp, crab, lobster, squid, oyster, mussels, clams, anchovies, or fish sauce, etc."
+ *                 restaurant:
+ *                   _id: "6800ab45f3ba9b608b7eed0e"
+ *                   name: "Louisvanich"
+ *                   address: "1642 Banthat Thong Rd Subdistrict Rong Muang"
+ *                   district: "Pathumwan"
+ *                   province: "Bangkok"
+ *                   postalcode: "10330"
+ *                   tel: "063-993-6550"
+ *                   region: "Central"
+ *                   opentime: "12:00"
+ *                   closetime: "23:00"
+ *                   managerId: "6800ab13f3ba9b608b7eed09"
+ *                 available: true
+ *                 recommended: true
+ *                 orderCount: 0
+ *                 stockCount: 50
  *       404:
  *         description: Menu item not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               error: "Menu item not found"
  *       500:
  *         description: Cannot find Menu
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               error: "Cannot find Menu"
  */
+
+
+
+
 
 /**
  * @swagger
@@ -158,21 +286,14 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               price:
- *                 type: number
- *               stockCount:
- *                 type: integer
- *               allergens:
- *                 type: array
- *                 items:
- *                   type: string
+ *             $ref: '#/components/schemas/MenuItem'
  *     responses:
  *       200:
  *         description: Menu item created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MenuItem'
  *       500:
  *         description: Cannot create MenuItem
  */
@@ -203,17 +324,14 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               price:
- *                 type: number
- *               stockCount:
- *                 type: integer
+ *             $ref: '#/components/schemas/MenuItem'
  *     responses:
  *       200:
  *         description: Menu item updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/MenuItem'
  *       404:
  *         description: Menu item not found
  *       500:
@@ -244,6 +362,15 @@
  *     responses:
  *       200:
  *         description: Menu item deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
  *       404:
  *         description: Menu item not found
  *       500:
