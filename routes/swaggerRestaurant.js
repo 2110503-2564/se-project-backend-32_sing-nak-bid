@@ -117,17 +117,87 @@
  * /restaurants:
  *   get:
  *     summary: Get all restaurants
- *     tags: [Restaurants]   
+ *     tags: [Restaurants]
  *     responses:
  *       200:
  *         description: A list of restaurants
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 count:
+ *                   type: integer
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                       address:
+ *                         type: string
+ *                       district:
+ *                         type: string
+ *                       province:
+ *                         type: string
+ *                       postalcode:
+ *                         type: string
+ *                       tel:
+ *                         type: string
+ *                       region:
+ *                         type: string
+ *                       opentime:
+ *                         type: string
+ *                       closetime:
+ *                         type: string
+ *                       managerId:
+ *                         type: string
+ *                       ratings:
+ *                         type: array
+ *                         items:
+ *                           type: number
+ *                       averageRating:
+ *                         type: number
+ *                       reservations:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                       menuItems:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *             example:
+ *               success: true
+ *               count: 1
+ *               data:
+ *                 - _id: "680e0c1447829f05e0cba964"
+ *                   name: "DEMO"
+ *                   address: "123"
+ *                   district: "123"
+ *                   province: "123"
+ *                   postalcode: "90210"
+ *                   tel: "123-456-7890"
+ *                   region: "West Coast"
+ *                   opentime: "08:00"
+ *                   closetime: "22:00"
+ *                   managerId: "680e0c0b47829f05e0cba961"
+ *                   ratings: []
+ *                   averageRating: 0
+ *                   reservations: []
+ *                   menuItems: []
  */
+
 /**
  * @swagger
  * /restaurants/{id}:
  *   get:
  *     summary: Get a restaurant
- *     tags: [Restaurants]  
+ *     tags: [Restaurants]
  *     parameters:
  *       - in: path
  *         name: id
@@ -137,16 +207,81 @@
  *         description: The restaurant id
  *     responses:
  *       200:
- *         description: A restaurants description by id
+ *         description: A restaurant description by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     address:
+ *                       type: string
+ *                     district:
+ *                       type: string
+ *                     province:
+ *                       type: string
+ *                     postalcode:
+ *                       type: string
+ *                     tel:
+ *                       type: string
+ *                     region:
+ *                       type: string
+ *                     opentime:
+ *                       type: string
+ *                     closetime:
+ *                       type: string
+ *                     managerId:
+ *                       type: string
+ *                     ratings:
+ *                       type: array
+ *                       items:
+ *                         type: number
+ *                     averageRating:
+ *                       type: number
+ *                     reservations:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                     menuItems:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: "680e0c1447829f05e0cba964"
+ *                 name: "DEMO"
+ *                 address: "123"
+ *                 district: "123"
+ *                 province: "123"
+ *                 postalcode: "90210"
+ *                 tel: "123-456-7890"
+ *                 region: "West Coast"
+ *                 opentime: "08:00"
+ *                 closetime: "22:00"
+ *                 managerId: "680e0c0b47829f05e0cba961"
+ *                 ratings: []
+ *                 averageRating: 0
+ *                 reservations: []
+ *                 menuItems: []
  *       404:
- *         description: The restautant was not found
+ *         description: The restaurant was not found
  */
+
 /**
  * @swagger
  * /restaurants:
  *   post:
  *     summary: Create a new restaurant
- *     tags: [Restaurants]   
+ *     tags: [Restaurants]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -157,10 +292,32 @@
  *             $ref: '#/components/schemas/Restaurant'
  *     responses:
  *       201:
- *         description: The restaurants was successfully created
+ *         description: The restaurant was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/Restaurant'
  *       500:
  *         description: Some error happened
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *             example:
+ *               success: false
+ *               message: "Internal server error"
  */
+
 /**
  * @swagger
  * /restaurants/{id}:
@@ -206,6 +363,15 @@
  *     responses:
  *       200:
  *         description: The restaurants was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/Restaurant'
  *       404:
  *         description: The restautant was not found
  *       500:
