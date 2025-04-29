@@ -48,6 +48,9 @@ const MenuItemSchema = new mongoose.Schema({
   stockCount: {
     type: Number,
     default: 0
+  },
+  picture: {
+    type: String,
   }
 });
 
