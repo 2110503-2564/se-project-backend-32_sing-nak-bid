@@ -92,7 +92,7 @@ exports.updateRating = async (req, res, next) => {
         return res.status(404).json({ success: false, message: 'Restaurant not found' });
       }
   
-      const rating = restaurant.ratings.id(req.params.ratingId);
+      const rating = restaurant.ratings.id(req.params.id);
       if (!rating) {
         return res.status(404).json({ success: false, message: 'Rating not found' });
       }
