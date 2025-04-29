@@ -76,7 +76,7 @@
 
 /**
  * @swagger
- * /api/v1/order:
+ * /order:
  *   get:
  *     summary: Get all orders of the user
  *     tags: [Orders]
@@ -200,7 +200,7 @@
 
 /**
  * @swagger
- * /api/v1/reservations/{reservationId}/order/{orderId}:
+ * /reservations/{reservationId}/order/{orderId}:
  *   get:
  *     summary: Get one order by reservation
  *     tags: [Orders]
@@ -266,7 +266,7 @@
 
 /**
  * @swagger
- * /api/v1/reservations/{reservationId}/order:
+ * /reservations/{reservationId}/order:
  *   post:
  *     summary: Create a new order under a reservation
  *     tags: [Orders]
@@ -302,7 +302,7 @@
 
 /**
  * @swagger
- * /api/v1/reservations/{reservationId}/order/{orderId}:
+ * /reservations/{reservationId}/order/{orderId}:
  *   put:
  *     summary: Update an existing order
  *     tags: [Orders]
@@ -344,7 +344,7 @@
 
 /**
  * @swagger
- * /api/v1/reservations/{reservationId}/order/{orderId}:
+ * /reservations/{reservationId}/order/{orderId}:
  *   delete:
  *     summary: Delete an existing order
  *     tags: [Orders]
